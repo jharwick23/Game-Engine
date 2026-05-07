@@ -4,9 +4,15 @@
 #include <SDL2/SDL.h>
 
 float vertices[] = {
+    // Triangle 1
     -0.5f, -0.5f,
+     0.0f, -0.5f,
+    -0.25f, 0.5f,
+
+    // Triangle 2
+     0.0f, -0.5f,
      0.5f, -0.5f,
-     0.0f,  0.5f
+     0.25f, 0.5f
 };
 
 const char* vertexShaderSource = R"(
@@ -68,7 +74,7 @@ static void render(SDL_Window *window)
 
     glBindVertexArray(VAO);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 
     SDL_GL_SwapWindow(window);
 }
@@ -111,8 +117,7 @@ static void descVerLay()
 static void createShaderProgram()
 {
     // Vertex Shader
-    unsigned int vertexShader =
-        glCreateShader(GL_VERTEX_SHADER);
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     glShaderSource(
         vertexShader,
@@ -124,8 +129,7 @@ static void createShaderProgram()
     glCompileShader(vertexShader);
 
     // Fragment Shader
-    unsigned int fragmentShader =
-        glCreateShader(GL_FRAGMENT_SHADER);
+    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
     glShaderSource(
         fragmentShader,
