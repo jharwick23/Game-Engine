@@ -12,6 +12,8 @@ find_package(OpenGL REQUIRED)
 add_executable(GameEngine
     main.cpp
     vendor/glad/src/glad.c
+    engine/input/input.cpp
+    engine/render/render.cpp
 )
 
 # Include directories
