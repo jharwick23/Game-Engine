@@ -1,0 +1,5 @@
+In here we would put the GLSL shader files
+
+We can have many separate shaders that can be called during runtime
+
+TODO: Load shaders from disk instead of hardocding in the renderer

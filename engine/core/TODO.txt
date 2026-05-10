@@ -1,0 +1,3 @@
+Put foundational engine systems into here
+
+TODO: put main engine startup and mainloop as well as shutdown into here
