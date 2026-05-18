@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
-#include "engine/input/input.h"
-#include "engine/render/render.h"
+#include "../input/input.h"
+#include "../render/render.h"
 
 int main()
 {
@@ -36,6 +36,8 @@ int main()
         SDL_Quit();
         return -1;
     }
+
+    SDL_SetWindowResizable(window, SDL_TRUE);
 
     // Create the OpenGL Context
     SDL_GLContext glContext = SDL_GL_CreateContext(window);

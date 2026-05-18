@@ -2,6 +2,12 @@
 
 Renderer::Renderer()
     : vertices{
+        // For a rectangle
+        //0.5f, 0.5f, 0.0f, // top right
+        //0.5f, -0.5f, 0.0f, // bottom right
+        //-0.5f, -0.5f, 0.0f, // bottom left
+        //-0.5f, 0.5f, 0.0f // top left
+
         // Triangle 1
         -0.5f, -0.5f,
          0.0f, -0.5f,
@@ -11,6 +17,10 @@ Renderer::Renderer()
          0.0f, -0.5f,
          0.5f, -0.5f,
          0.25f,  0.5f
+    },
+    indices{
+        0, 1, 2,  // first triangle
+        2, 3, 0   // second triangle
     }
 {
     // Vertex shader source code
@@ -54,6 +64,10 @@ void Renderer::render(SDL_Window *window)
     // Bind vertex array containing vertex layout state
     glBindVertexArray(VAO);
 
+    // Render the traingles rom an index buffer
+    // When we use glDrawElements we draw using indices provided in the element buffer currently bound
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     // Draw triangles using currently bound VAO/shader
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -76,6 +90,9 @@ void Renderer::genGPUObj()
 
     // Generate Vertex Buffer Object
     glGenBuffers(1, &VBO);
+
+    // Generate Element Buffer Object
+    glGenBuffers(1, &EBO);  
 }
 
 void Renderer::bindGPUObj()
@@ -91,13 +108,21 @@ void Renderer::bindGPUObj()
                 sizeof(vertices),
                 vertices.data(),
                 GL_STATIC_DRAW);
+
+    // Bind EBO as current element array buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(indices),
+                 indices.data(),
+                 GL_STATIC_DRAW);
 }
 
 void Renderer::descVerLay()
 {
     // Describe vertex attribute layout:
     // location = 0
-    // 2 floats per vertex
+    // 2 floats per vertex for two triangles
+    // 3 floats per vertex for rectangle
     // tightly packed
     glVertexAttribPointer(
         0,

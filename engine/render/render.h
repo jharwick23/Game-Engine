@@ -11,6 +11,11 @@ private:
     // Vertex data stored on CPU side before upload to GPU
     std::array<float, 12> vertices;
 
+    // Use indices and Element Buffer Objects to draw a rectangle without as much overhead
+    std::array<unsigned int, 6> indices;
+
+    unsigned int EBO;
+
     // GLSL source code for vertex shader
     const char* vertexShaderSource;
 

@@ -10,7 +10,7 @@ find_package(OpenGL REQUIRED)
 
 # Create executable
 add_executable(GameEngine
-    main.cpp
+    engine/core/main.cpp
     vendor/glad/src/glad.c
     engine/input/input.cpp
     engine/render/render.cpp
