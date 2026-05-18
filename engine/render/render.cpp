@@ -3,20 +3,22 @@
 Renderer::Renderer()
     : vertices{
         // For a rectangle
-        //0.5f, 0.5f, 0.0f, // top right
-        //0.5f, -0.5f, 0.0f, // bottom right
-        //-0.5f, -0.5f, 0.0f, // bottom left
-        //-0.5f, 0.5f, 0.0f // top left
-
+        0.5f, 0.5f, 0.0f, // top right
+        0.5f, -0.5f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f // top left
+    },
+    firstTriangle{
         // Triangle 1
         -0.5f, -0.5f,
-         0.0f, -0.5f,
+        0.0f, -0.5f,
         -0.25f,  0.5f,
-
+    },
+    secondTriangle{
         // Triangle 2
-         0.0f, -0.5f,
-         0.5f, -0.5f,
-         0.25f,  0.5f
+        0.0f, -0.5f,
+        0.5f, -0.5f,
+        0.25f,  0.5f
     },
     indices{
         0, 1, 2,  // first triangle
@@ -62,14 +64,20 @@ void Renderer::render(SDL_Window *window)
     glUseProgram(shaderProgram);
 
     // Bind vertex array containing vertex layout state
-    glBindVertexArray(VAO);
-
-    // Render the traingles rom an index buffer
-    // When we use glDrawElements we draw using indices provided in the element buffer currently bound
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(VAOs[0]);
 
     // Draw triangles using currently bound VAO/shader
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Bind vertex array containing vertex layout state
+    glBindVertexArray(VAOs[1]);
+
+    // Draw triangles using currently bound VAO/shader
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Render the traingles from an index buffer
+    // When we use glDrawElements we draw using indices provided in the element buffer currently bound
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Swap back buffer to front buffer for display
     SDL_GL_SwapWindow(window);
@@ -80,16 +88,16 @@ void Renderer::initRenderer()
     createShaderProgram();
     genGPUObj();
     bindGPUObj();
-    descVerLay();
+    //descVerLay();
 }
 
 void Renderer::genGPUObj()
 {
     // Generate Vertex Array Object
-    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(2, VAOs.data());
 
     // Generate Vertex Buffer Object
-    glGenBuffers(1, &VBO);
+    glGenBuffers(2, VBOs.data());
 
     // Generate Element Buffer Object
     glGenBuffers(1, &EBO);  
@@ -98,16 +106,32 @@ void Renderer::genGPUObj()
 void Renderer::bindGPUObj()
 {
     // Bind VAO so subsequent vertex state is stored inside it
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAOs[0]);
 
     // Bind VBO as current array buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 
     // Upload vertex data from CPU memory to GPU memory
     glBufferData(GL_ARRAY_BUFFER,
-                sizeof(vertices),
-                vertices.data(),
+                sizeof(firstTriangle),
+                firstTriangle.data(),
                 GL_STATIC_DRAW);
+
+    descVerLay();
+
+    // Bind VAO so subsequent vertex state is stored inside it
+    glBindVertexArray(VAOs[1]);
+
+    // Bind VBO as current array buffer
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+
+    // Upload vertex data from CPU memory to GPU memory
+    glBufferData(GL_ARRAY_BUFFER,
+                sizeof(secondTriangle),
+                secondTriangle.data(),
+                GL_STATIC_DRAW);
+
+    descVerLay();
 
     // Bind EBO as current element array buffer
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

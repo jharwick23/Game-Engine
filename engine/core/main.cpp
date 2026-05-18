@@ -74,6 +74,21 @@ int main()
 
     while(running)
     {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+                running = false;
+
+            if (event.type == SDL_WINDOWEVENT &&
+                event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+            {
+                glViewport(0, 0,
+                    event.window.data1,
+                    event.window.data2);
+            }
+        }
+
         WindowInput::processInput(running);
 
         renderer.render(window);

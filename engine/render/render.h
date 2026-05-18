@@ -9,7 +9,13 @@ class Renderer
 {
 private:
     // Vertex data stored on CPU side before upload to GPU
+    // Used for the rectangle
     std::array<float, 12> vertices;
+
+    // Two arrays below used for triangles
+    std::array<float, 6> firstTriangle;
+
+    std::array<float, 6> secondTriangle;
 
     // Use indices and Element Buffer Objects to draw a rectangle without as much overhead
     std::array<unsigned int, 6> indices;
@@ -24,11 +30,11 @@ private:
 
     // Vertex Array Object
     // Stores vertex attribute configuration/state
-    unsigned int VAO;
+    std::array <unsigned int, 2> VAOs;
 
     // Vertex Buffer Object
     // Stores vertex data on GPU
-    unsigned int VBO;
+    std::array <unsigned int, 2> VBOs;
 
     // Linked GPU shader program
     unsigned int shaderProgram;
