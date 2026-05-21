@@ -40,7 +40,7 @@ Renderer::Renderer()
 
     // Fragment shader source code
     // Responsible for final pixel color
-    fragmentShaderSource = R"(
+    fragmentShaderSourceRed = R"(
     #version 330 core
 
     out vec4 FragColor;
@@ -48,6 +48,17 @@ Renderer::Renderer()
     void main()
     {
         FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    )";
+
+    fragmentShaderSourceGreen = R"(
+    #version 330 core
+    
+    out vec4 FragColor;
+    
+    void main()
+    {
+        FragColor = vec4(0.0, 1.0, 0.0, 1.0);
     }
     )";
 }
@@ -61,7 +72,7 @@ void Renderer::render(SDL_Window *window)
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Activate shader program for rendering
-    glUseProgram(shaderProgram);
+    glUseProgram(shaderProgramRed);
 
     // Bind vertex array containing vertex layout state
     glBindVertexArray(VAOs[0]);
@@ -69,6 +80,7 @@ void Renderer::render(SDL_Window *window)
     // Draw triangles using currently bound VAO/shader
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
+    glUseProgram(shaderProgramGreen);
     // Bind vertex array containing vertex layout state
     glBindVertexArray(VAOs[1]);
 
@@ -186,7 +198,7 @@ void Renderer::createShaderProgram()
     glShaderSource(
         fragmentShader,
         1,
-        &fragmentShaderSource,
+        &fragmentShaderSourceRed,
         nullptr
     );
 
@@ -195,14 +207,62 @@ void Renderer::createShaderProgram()
 
     // Shader Program
     // Create final GPU shader program object
-    shaderProgram = glCreateProgram();
+    shaderProgramRed = glCreateProgram();
 
     // Attach shaders to shader program
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
+    glAttachShader(shaderProgramRed, vertexShader);
+    glAttachShader(shaderProgramRed, fragmentShader);
 
     // Link shaders into executable GPU program
-    glLinkProgram(shaderProgram);
+    glLinkProgram(shaderProgramRed);
+
+    // Cleanup shaders
+    // Individual shader objects no longer needed after linking
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    // For Green
+    // TODO: Make method more dynamic
+    // Vertex Shader
+    // Create vertex shader object
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+    // Attach GLSL source code to shader object
+    glShaderSource(
+        vertexShader,
+        1,
+        &vertexShaderSource,
+        nullptr
+    );
+
+    // Compile vertex shader into GPU instructions
+    glCompileShader(vertexShader);
+
+    // Fragment Shader
+    // Create fragment shader object
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    // Attach GLSL source code to fragment shader
+    glShaderSource(
+        fragmentShader,
+        1,
+        &fragmentShaderSourceGreen,
+        nullptr
+    );
+
+    // Compile fragment shader
+    glCompileShader(fragmentShader);
+
+    // Shader Program
+    // Create final GPU shader program object
+    shaderProgramGreen = glCreateProgram();
+
+    // Attach shaders to shader program
+    glAttachShader(shaderProgramGreen, vertexShader);
+    glAttachShader(shaderProgramGreen, fragmentShader);
+
+    // Link shaders into executable GPU program
+    glLinkProgram(shaderProgramGreen);
 
     // Cleanup shaders
     // Individual shader objects no longer needed after linking

@@ -25,8 +25,11 @@ private:
     // GLSL source code for vertex shader
     const char* vertexShaderSource;
 
-    // GLSL source code for fragment shader
-    const char* fragmentShaderSource;
+    // GLSL source code for red fragment shader
+    const char* fragmentShaderSourceRed;
+
+    // GLSL source code for green fragment shader
+    const char* fragmentShaderSourceGreen;
 
     // Vertex Array Object
     // Stores vertex attribute configuration/state
@@ -37,7 +40,9 @@ private:
     std::array <unsigned int, 2> VBOs;
 
     // Linked GPU shader program
-    unsigned int shaderProgram;
+    unsigned int shaderProgramRed;
+
+    unsigned int shaderProgramGreen;
 
 public:
     // Constructor
