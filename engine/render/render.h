@@ -39,9 +39,10 @@ private:
     // Stores vertex data on GPU
     std::array <unsigned int, 2> VBOs;
 
-    // Linked GPU shader program
+    // Linked GPU shader program (Red)
     unsigned int shaderProgramRed;
 
+    // Linked GPU shader program (Green)
     unsigned int shaderProgramGreen;
 
 public:
@@ -69,7 +70,7 @@ public:
 
     // Create the shaderprogram object
     // Compiles shaders and links them into a shader program
-    void createShaderProgram();
+    void createShaderProgram(unsigned int &shaderProgram, const char *fragmentShaderSource);
 };
 
 #endif
