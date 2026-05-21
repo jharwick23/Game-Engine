@@ -80,6 +80,7 @@ void Renderer::render(SDL_Window *window)
     // Draws triangles in wireframe mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    /*
     // Draw triangles using currently bound VAO/shader
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -91,10 +92,11 @@ void Renderer::render(SDL_Window *window)
 
     // Draw triangles using currently bound VAO/shader
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    */
 
     // Render the traingles from an index buffer
     // When we use glDrawElements we draw using indices provided in the element buffer currently bound
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Swap back buffer to front buffer for display
     SDL_GL_SwapWindow(window);
@@ -112,10 +114,10 @@ void Renderer::initRenderer()
 void Renderer::genGPUObj()
 {
     // Generate Vertex Array Object
-    glGenVertexArrays(2, VAOs.data());
+    glGenVertexArrays(1, VAOs.data());
 
     // Generate Vertex Buffer Object
-    glGenBuffers(2, VBOs.data());
+    glGenBuffers(1, VBOs.data());
 
     // Generate Element Buffer Object
     glGenBuffers(1, &EBO);  
@@ -131,12 +133,13 @@ void Renderer::bindGPUObj()
 
     // Upload vertex data from CPU memory to GPU memory
     glBufferData(GL_ARRAY_BUFFER,
-                sizeof(firstTriangle),
-                firstTriangle.data(),
+                sizeof(vertices),
+                vertices.data(),
                 GL_STATIC_DRAW);
 
     descVerLay();
 
+    /*
     // Bind VAO so subsequent vertex state is stored inside it
     glBindVertexArray(VAOs[1]);
 
@@ -150,6 +153,7 @@ void Renderer::bindGPUObj()
                 GL_STATIC_DRAW);
 
     descVerLay();
+    */
 
     // Bind EBO as current element array buffer
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -168,10 +172,10 @@ void Renderer::descVerLay()
     // tightly packed
     glVertexAttribPointer(
         0,
-        2,
+        3,
         GL_FLOAT,
         GL_FALSE,
-        2 * sizeof(float),
+        3 * sizeof(float),
         (void*)0
     );
 
